@@ -8,7 +8,6 @@ import PrecompileTools
 
 PrecompileTools.@recompile_invalidations begin
     using ArrayInterface
-    using RecursiveFactorization
     using Base: cache_dependencies, Bool
     using LinearAlgebra
     using SparseArrays
@@ -101,7 +100,6 @@ EnumX.@enumx DefaultAlgorithmChoice begin
     UMFPACKFactorization
     KrylovJL_GMRES
     GenericLUFactorization
-    RFLUFactorization
     LDLtFactorization
     BunchKaufmanFactorization
     CHOLMODFactorization
@@ -188,7 +186,7 @@ for kralg in (Krylov.lsmr!, Krylov.craigmr!)
 end
 for alg in (:LUFactorization, :FastLUFactorization, :SVDFactorization,
     :GenericFactorization, :GenericLUFactorization, :SimpleLUFactorization,
-    :RFLUFactorization, :UMFPACKFactorization, :KLUFactorization, :SparspakFactorization,
+    :UMFPACKFactorization, :KLUFactorization, :SparspakFactorization,
     :DiagonalFactorization, :CholeskyFactorization, :BunchKaufmanFactorization,
     :CHOLMODFactorization, :LDLtFactorization, :AppleAccelerateLUFactorization,
     :MKLLUFactorization, :MetalLUFactorization)
@@ -207,7 +205,6 @@ PrecompileTools.@compile_workload begin
     prob = LinearProblem(A, b)
     sol = solve(prob)
     sol = solve(prob, LUFactorization())
-    sol = solve(prob, RFLUFactorization())
     sol = solve(prob, KrylovJL_GMRES())
 end
 
@@ -234,7 +231,7 @@ error_no_cudss_lu(A) = nothing
 cudss_loaded(A) = false
 
 export LUFactorization, SVDFactorization, QRFactorization, GenericFactorization,
-       GenericLUFactorization, SimpleLUFactorization, RFLUFactorization,
+       GenericLUFactorization, SimpleLUFactorization,
        NormalCholeskyFactorization, NormalBunchKaufmanFactorization,
        UMFPACKFactorization, KLUFactorization, FastLUFactorization, FastQRFactorization,
        SparspakFactorization, DiagonalFactorization, CholeskyFactorization,

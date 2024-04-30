@@ -222,7 +222,6 @@ end
         LUFactorization(),
         QRFactorization(),
         SVDFactorization(),
-        RFLUFactorization(),
         LinearSolve.defaultalg(prob1.A, prob1.b)
     ]
 

@@ -14,9 +14,7 @@ but one may need to change this to receive more performance or precision. If
 more precision is necessary, `QRFactorization()` and `SVDFactorization()` are
 the best choices, with SVD being the slowest but most precise.
 
-For efficiency, `RFLUFactorization` is the fastest for dense LU-factorizations until around
-150x150 matrices, though this can be dependent on the exact details of the hardware. After this
-point, `MKLLUFactorization` is usually faster on most hardware. Note that on Mac computers
+`MKLLUFactorization` is usually fastest on most hardware. Note that on Mac computers
 that `AppleAccelerateLUFactorization` is generally always the fastest. `LUFactorization` will
 use your base system BLAS which can be fast or slow depending on the hardware configuration.
 `SimpleLUFactorization` will be fast only on very small matrices but can cut down on compile times.
@@ -81,12 +79,6 @@ use `Krylov_GMRES()`.
     batch size.
 
 ## Full List of Methods
-
-### RecursiveFactorization.jl
-
-```@docs
-RFLUFactorization
-```
 
 ### Base.LinearAlgebra
 

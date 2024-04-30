@@ -29,12 +29,7 @@ a few ways:
  1. The Fortran/C code that NumPy/SciPy uses is actually slow. It's [OpenBLAS](https://github.com/xianyi/OpenBLAS),
     a library developed in part by the Julia Lab back in 2012 as a fast open source BLAS implementation. Many
     open source environments now use this build, including many R distributions. However, the Julia Lab has greatly
-    improved its ability to generate optimized SIMD in platform-specific ways. This, and improved multithreading support
-    (OpenBLAS's multithreading is rather slow), has led to pure Julia-based BLAS implementations which the lab now
-    works on. This includes [RecursiveFactorization.jl](https://github.com/JuliaLinearAlgebra/RecursiveFactorization.jl)
-    which generally outperforms OpenBLAS by 2x-10x depending on the platform. It even outperforms MKL for small matrices
-    (<100). LinearSolve.jl uses RecursiveFactorization.jl by default sometimes, but switches to BLAS when it would be
-    faster (in a platform and matrix-specific way).
+    improved its ability to generate optimized SIMD in platform-specific ways.
  2. Standard approaches to handling linear solves re-allocate the pivoting vector each time. This leads to GC pauses that
     can slow down calculations. LinearSolve.jl has proper caches for fully preallocated no-GC workflows.
  3. LinearSolve.jl makes many other optimizations, like factorization reuse and symbolic factorization reuse, automatic.

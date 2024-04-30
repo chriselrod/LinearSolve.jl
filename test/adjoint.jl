@@ -89,7 +89,6 @@ A = rand(n, n);
 b1 = rand(n);
 for alg in (
     LUFactorization(),
-    RFLUFactorization(),
     KrylovJL_GMRES()
 )
     @show alg

@@ -31,7 +31,7 @@ end
 # For BandedMatrix
 for alg in (:SVDFactorization, :MKLLUFactorization, :DiagonalFactorization,
     :SparspakFactorization, :KLUFactorization, :UMFPACKFactorization,
-    :GenericLUFactorization, :RFLUFactorization, :BunchKaufmanFactorization,
+    :GenericLUFactorization, :BunchKaufmanFactorization,
     :CHOLMODFactorization, :NormalCholeskyFactorization, :LDLtFactorization,
     :AppleAccelerateLUFactorization, :CholeskyFactorization)
     @eval begin
@@ -50,7 +50,7 @@ end
 # For Symmetric BandedMatrix
 for alg in (:SVDFactorization, :MKLLUFactorization, :DiagonalFactorization,
     :SparspakFactorization, :KLUFactorization, :UMFPACKFactorization,
-    :GenericLUFactorization, :RFLUFactorization, :BunchKaufmanFactorization,
+    :GenericLUFactorization, :BunchKaufmanFactorization,
     :CHOLMODFactorization, :NormalCholeskyFactorization,
     :AppleAccelerateLUFactorization, :QRFactorization, :LUFactorization)
     @eval begin

@@ -1,15 +1,16 @@
 using LinearSolve, LinearAlgebra, SparseArrays, Test, JET
-@test LinearSolve.defaultalg(nothing, zeros(3)).alg ===
-      LinearSolve.DefaultAlgorithmChoice.RFLUFactorization
 prob = LinearProblem(rand(3, 3), rand(3))
 solve(prob)
 
 if LinearSolve.appleaccelerate_isavailable()
     @test LinearSolve.defaultalg(nothing, zeros(50)).alg ===
           LinearSolve.DefaultAlgorithmChoice.AppleAccelerateLUFactorization
+elseif LinearSolve.usemkl
+    @test LinearSolve.defaultalg(nothing, zeros(50)).alg ===
+          LinearSolve.DefaultAlgorithmChoice.MKLLUFactorization
 else
     @test LinearSolve.defaultalg(nothing, zeros(50)).alg ===
-          LinearSolve.DefaultAlgorithmChoice.RFLUFactorization
+          LinearSolve.DefaultAlgorithmChoice.LUFactorization
 end
 prob = LinearProblem(rand(50, 50), rand(50))
 solve(prob)

@@ -1,6 +1,6 @@
 needs_concrete_A(alg::DefaultLinearSolver) = true
 mutable struct DefaultLinearSolverInit{T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
-    T13, T14, T15, T16, T17, T18, T19, T20, T21}
+    T13, T14, T15, T16, T17, T18, T19, T20}
     LUFactorization::T1
     QRFactorization::T2
     DiagonalFactorization::T3
@@ -10,18 +10,17 @@ mutable struct DefaultLinearSolverInit{T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, 
     UMFPACKFactorization::T7
     KrylovJL_GMRES::T8
     GenericLUFactorization::T9
-    RFLUFactorization::T10
-    LDLtFactorization::T11
-    BunchKaufmanFactorization::T12
-    CHOLMODFactorization::T13
-    SVDFactorization::T14
-    CholeskyFactorization::T15
-    NormalCholeskyFactorization::T16
-    AppleAccelerateLUFactorization::T17
-    MKLLUFactorization::T18
-    QRFactorizationPivoted::T19
-    KrylovJL_CRAIGMR::T20
-    KrylovJL_LSMR::T21
+    LDLtFactorization::T10
+    BunchKaufmanFactorization::T11
+    CHOLMODFactorization::T12
+    SVDFactorization::T13
+    CholeskyFactorization::T14
+    NormalCholeskyFactorization::T15
+    AppleAccelerateLUFactorization::T16
+    MKLLUFactorization::T17
+    QRFactorizationPivoted::T18
+    KrylovJL_CRAIGMR::T19
+    KrylovJL_LSMR::T20
 end
 
 @generated function __setfield!(cache::DefaultLinearSolverInit, alg::DefaultLinearSolver, v)
@@ -168,26 +167,14 @@ end
 # Allows A === nothing as a stand-in for dense matrix
 function defaultalg(A, b, assump::OperatorAssumptions{Bool})
     alg = if assump.issq
-        # Special case on Arrays: avoid BLAS for RecursiveFactorization.jl when
-        # it makes sense according to the benchmarks, which is dependent on
-        # whether MKL or OpenBLAS is being used
         if (A === nothing && !(b isa GPUArraysCore.AnyGPUArray)) || A isa Matrix
             if (A === nothing ||
                 eltype(A) <: BLASELTYPES) &&
                ArrayInterface.can_setindex(b) &&
                (__conditioning(assump) === OperatorCondition.IllConditioned ||
                 __conditioning(assump) === OperatorCondition.WellConditioned)
-                if length(b) <= 10
-                    DefaultAlgorithmChoice.RFLUFactorization
-                elseif appleaccelerate_isavailable()
+                if appleaccelerate_isavailable()
                     DefaultAlgorithmChoice.AppleAccelerateLUFactorization
-                elseif (length(b) <= 100 || (isopenblas() && length(b) <= 500) ||
-                        (usemkl && length(b) <= 200)) &&
-                       (A === nothing ? eltype(b) <: Union{Float32, Float64} :
-                        eltype(A) <: Union{Float32, Float64})
-                    DefaultAlgorithmChoice.RFLUFactorization
-                    #elseif A === nothing || A isa Matrix
-                    #    alg = FastLUFactorization()
                 elseif usemkl
                     DefaultAlgorithmChoice.MKLLUFactorization
                 else
@@ -262,8 +249,6 @@ function algchoice_to_alg(alg::Symbol)
         KrylovJL_GMRES()
     elseif alg === :GenericLUFactorization
         GenericLUFactorization()
-    elseif alg === :RFLUFactorization
-        RFLUFactorization()
     elseif alg === :BunchKaufmanFactorization
         BunchKaufmanFactorization()
     elseif alg === :CHOLMODFactorization
@@ -389,8 +374,7 @@ end
     ex = :()
     for alg in first.(EnumX.symbol_map(DefaultAlgorithmChoice.T))
         newex = if alg in Symbol.((DefaultAlgorithmChoice.MKLLUFactorization,
-            DefaultAlgorithmChoice.AppleAccelerateLUFactorization,
-            DefaultAlgorithmChoice.RFLUFactorization))
+            DefaultAlgorithmChoice.AppleAccelerateLUFactorization))
             quote
                 getproperty(cache.cacheval, $(Meta.quot(alg)))[1]' \ dy
             end

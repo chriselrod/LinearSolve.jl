@@ -138,7 +138,7 @@ db22 = ForwardDiff.gradient(x -> f(eltype(x).(A), eltype(x).(b1), x), copy(b2))
 @test db1 ≈ db12
 @test db2 ≈ db22
 
-function f2(A, b1, b2; alg = RFLUFactorization())
+function f2(A, b1, b2; alg = LUFactorization())
     prob = LinearProblem(A, b1)
     cache = init(prob, alg)
     s1 = copy(solve!(cache).u)
@@ -180,7 +180,6 @@ dA = zeros(n, n);
 b1 = rand(n);
 for alg in (
     LUFactorization(),
-    RFLUFactorization()    # KrylovJL_GMRES(), fails
 )
     @show alg
     function fb(b)

@@ -21,7 +21,6 @@ end
 algs = [
     LUFactorization(),
     GenericLUFactorization(),
-    RFLUFactorization(),
     AppleAccelerateLUFactorization(),
     MetalLUFactorization()
 ]
